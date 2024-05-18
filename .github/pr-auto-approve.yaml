@@ -1,18 +1,21 @@
-name: Auto Approve
-on:
-  pull_request:
-    types:
-      - opened
-      - reopened
-      - synchronize
-      - ready_for_review
+name: Dependabot auto-approve
+on: pull_request_target
+
+permissions:
+  pull-requests: write
+
 jobs:
-  approve:
-    if: |
-      github.event.pull_request.user.login == github.repository_owner
-      && ! github.event.pull_request.draft
+  dependabot:
     runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
+    if: ${{ github.actor == 'dependabot[bot]' }}
     steps:
-      - uses: hmarr/auto-approve-action@v3
+      - name: Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v1.1.1
+        with:
+          github-token: '${{ secrets.GITHUB_TOKEN }}'
+      - name: Approve a PR
+        run: gh pr review --approve "$PR_URL"
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
