@@ -1,7 +1,7 @@
 import './App.css';
 
 function App() {
-  return <div className='App'>PRの自動化の確認aaafdsafdsaf</div>;
+  return <div className='App'>JIRAの自動化の確認</div>;
 }
 
 export default App;
